@@ -1,21 +1,32 @@
 FROM alpine:3.4
 
-ENV VERSION 2.3.0
-
 RUN apk add --no-cache busybox curl tar git openssl netcat-openbsd
 
-# RUN curl -L -o - https://github.com/Neilpang/acme.sh/archive/${VERSION}.tar.gz | tar -C /tmp -x -z -f -
+# Internal
+ENV ACME_DIR /acme.sh
+ENV LE_WORKING_DIR $ACME_DIR
+ENV TEMP_DIR /tmp/acme.sh
 
-ENV ACME.SH_DIR /acme.sh
+# External
 ENV CERT_DIR /certs
 ENV ACCOUNT_DIR /account
 
-RUN git clone --depth 1 https://github.com/Neilpang/acme.sh.git /tmp/acme.sh && \
+RUN git clone --depth 1 https://github.com/Neilpang/acme.sh.git ${TEMP_DIR} \
     &&  mkdir -p ${CERT_DIR} ${ACCOUNT_DIR} \
     && cd /tmp/acme.sh \
     && ./acme.sh --install \
-       --home ${ACME.SH_DIR} \
+       --home ${ACME_DIR} \
        --certhome ${CERT_DIR} \
        --accountkey ${ACCOUNT_DIR}/account.key \
        --accountconf ${ACCOUNT_DIR}/account.conf \
-       --useragent "
+       --useragent "acme.sh in docker" \
+    && ln -s ${ACME_DIR}/acme.sh /usr/local/bin \
+    && rm -rf ${TEMP_DIR}
+
+VOLUME $CERT_DIR
+VOLUME $ACCOUNT_DIR
+
+COPY docker-entrypoint.sh /
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["crond", "-f"]
