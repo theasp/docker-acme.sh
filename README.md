@@ -63,5 +63,8 @@ Renewing a cert is automatic.
 
 There is a cron job running in the container, you have nothing to do.
 
+## How to backup
+Backup `$(pwd)/account` and `$(pwd)/certs`. That is it.
+
 # LICENSE
 GPL-3.0
