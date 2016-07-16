@@ -18,7 +18,6 @@ RUN git clone --depth 1 https://github.com/Neilpang/acme.sh.git ${TEMP_DIR} \
        --home ${ACME_DIR} \
        --certhome ${CERT_DIR} \
        --accountkey ${ACCOUNT_DIR}/account.key \
-       --accountconf ${ACCOUNT_DIR}/account.conf \
        --useragent "acme.sh in docker" \
     && ln -s ${ACME_DIR}/acme.sh /usr/local/bin \
     && rm -rf ${TEMP_DIR}
