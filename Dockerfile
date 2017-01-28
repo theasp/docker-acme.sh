@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --no-cache busybox curl tar git openssl netcat-openbsd
+RUN apk add --no-cache busybox curl tar git openssl netcat-openbsd docker
 
 # Internal
 ENV ACME_DIR /acme.sh
